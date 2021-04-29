@@ -44,10 +44,10 @@ Actual time needed to complete: 50minutes
 
 Name of feature: Storage
 
-Estimate of time needed to complete: 
+Estimate of time needed to complete: 2 hours
 
 Start time: 1900
 
-Finish time: 
+Finish time:
 
-Actual time needed to complete: 
+Actual time needed to complete:

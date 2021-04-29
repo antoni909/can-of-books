@@ -64,15 +64,15 @@ app.get('/users', (request, response) => {
   });
 });
 
-
-
-const getBooks = ((request, response) => {
-  User.find({email: request.query.email}, (err, bookResults) => {
-    response.send(bookResults);
-  });
-});
-
 app.get('/books', getBooks);
 
+const getBooks = ((request, response) => {
+  console.log('my request',request.query);
+  User.find({email: request.query.email}, (err, bookResults) => {
+    console.log(bookResults);
+    if(err) return console.error(err);
+    else response.status(200).send('responnse obj: ',bookResults);
+  });
+});
 
 app.listen(PORT, ()=> console.log(`server listens on PORT:${PORT}`));

@@ -67,7 +67,7 @@ app.get('/users', (request, response) => {
 
 
 const getBooks = ((request, response) => {
-  User.find({email: 'kassie.r.bradshaw@gmail.com'}, (err, bookResults) => {
+  User.find({email: request.query.email}, (err, bookResults) => {
     response.send(bookResults);
   });
 });

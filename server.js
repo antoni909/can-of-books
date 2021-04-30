@@ -68,9 +68,9 @@ app.get('/users', (request, response) => {
 
 const getBooks = ((request, response) => {
   User.find({email: request.query.email}, (err, bookResults) => {
-    console.log(bookResults);
     if(err) return console.error(err);
     else response.status(200).send(bookResults);
+    console.log('my RSPN',bookResults);
   });
 });
 // why does app.get need to go after getBooks function?

@@ -4,6 +4,7 @@ const cors = require('cors');
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
+app.use(express.json());
 
 const PORT = process.env.PORT || 3001;
 app.use(cors());
@@ -18,7 +19,6 @@ app.get('/', (request, response) => {
   response.send('hello from the test, root/home');
 });
 
-// seed the database with some items so we can retrieve them
 // create routes and callbacks
 
 // eslint-disable-next-line no-unused-vars
@@ -51,12 +51,6 @@ const secondUser = new User({
       status: 'Read'},
   ]
 });
-// save the Seeded Data
-// firstUser.save();
-// secondUser.save(function (err) {
-//   if (err) console.log(err);
-//   else console.log('books are cool', firstUser);
-// });
 
 app.get('/users', (request, response) => {
   console.log(User.find({}));
@@ -66,14 +60,35 @@ app.get('/users', (request, response) => {
   });
 });
 
-const getBooks = ((request, response) => {
+app.get('/books', (request, response) => {
   User.find({email: request.query.email}, (err, bookResults) => {
     if(err) return console.error(err);
     else response.status(200).send(bookResults);
     console.log('my RSPN',bookResults);
   });
 });
-// why does app.get need to go after getBooks function?
-app.get('/books', getBooks);
+
+// book creation
+app.post('/books', (request, response) => {
+  console.log(request.body);
+  User.find({email: request.body.email}, (err, usersData) => {
+    if (usersData < 1) {
+      response.status(400).send('User does not exist');
+    } else {
+      let user = usersData[0];
+      user.books.push({
+        name: request.body.name,
+        description: request.body.description,
+        status: request.body.status
+      });
+      user.save().then( (usersData) => {
+        console.log(usersData);
+        response.send(usersData.books);
+      }).catch(err => {
+        response.status(500).send(err);
+      });
+    }
+  });
+});
 
 app.listen(PORT, ()=> console.log(`server listens on PORT:${PORT}`));

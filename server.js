@@ -91,4 +91,20 @@ app.post('/books', (request, response) => {
   });
 });
 
+app.delete('/books/:id', (request, response) => {
+  console.log('In request.query', request.query);
+  let email = request.query.user;
+  User.find({email: email}, (err, usersData) => {
+    let user = usersData[0];
+    console.log(user);
+    user.books = user.books.filter(book => `${book._id}` !== request.params.id);
+    console.log(user.books);
+    user.save().then( (usersData) => {
+      response.send(usersData.books);
+    }).catch(err => {
+      response.status(500).send(err);
+    });
+  });
+});
+
 app.listen(PORT, ()=> console.log(`server listens on PORT:${PORT}`));

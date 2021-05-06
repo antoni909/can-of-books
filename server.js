@@ -53,9 +53,9 @@ const secondUser = new User({
 });
 
 app.get('/users', (request, response) => {
-  console.log(User.find({}));
+  // console.log(User.find({}));
   User.find((err, userResults) => {
-    console.log(userResults);
+    // console.log(userResults);
     response.send(userResults);
   });
 });
@@ -64,7 +64,7 @@ app.get('/books', (request, response) => {
   User.find({email: request.query.email}, (err, bookResults) => {
     if(err) return console.error(err);
     else response.status(200).send(bookResults);
-    console.log('my RSPN',bookResults);
+    // console.log('my RSPN',bookResults);
   });
 });
 
@@ -92,17 +92,37 @@ app.post('/books', (request, response) => {
 });
 
 app.delete('/books/:id', (request, response) => {
-  console.log('In request.query', request.query);
+  // console.log('In request.query', request.query);
   let email = request.query.user;
   User.find({email: email}, (err, usersData) => {
     let user = usersData[0];
-    console.log(user);
+    // console.log(user);
     user.books = user.books.filter(book => `${book._id}` !== request.params.id);
-    console.log(user.books);
+    // console.log(user.books);
     user.save().then( (usersData) => {
       response.send(usersData.books);
     }).catch(err => {
       response.status(500).send(err);
+    });
+  });
+});
+
+
+app.put('/books/:id', (request, response)=>{
+  let email = request.body.user;
+  User.find({email: email}, (err,usersData)=>{
+    let bookId = request.params.id;
+    let user = usersData[0];
+    user.books.forEach( book => {
+      if(`${book._id}` === bookId){
+        book.name = request.body.name;
+        book.description = request.body.description;
+        book.status = request.body.status;
+      }
+    });
+    user.save().then(savedUsersData => {
+      console.log('savedUserData: ',savedUsersData);
+      response.status(200).send(savedUsersData.books);
     });
   });
 });

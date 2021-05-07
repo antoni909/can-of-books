@@ -107,9 +107,9 @@ app.delete('/books/:id', (request, response) => {
   });
 });
 
-
 app.put('/books/:id', (request, response)=>{
-  let email = request.body.user;
+  console.log(request.body);
+  let {email} = request.body;
   User.find({email: email}, (err,usersData)=>{
     let bookId = request.params.id;
     let user = usersData[0];
